@@ -7,6 +7,12 @@ const redisClient = redis.createClient({
 
 const redisPrefix = process.env.REDIS_PREFIX ?? '';
 
+// SET
+const redisSet = (key, payload) => {
+  redisClient.set(redisPrefix + key, payload);
+};
+
+// GET
 const redisGet = (key) => {
   return new Promise((resolve, reject) => {
     redisClient.get(redisPrefix + key, (err, data) => {
@@ -19,8 +25,9 @@ const redisGet = (key) => {
   });
 };
 
-const redisSet = (key, payload) => {
-  redisClient.set(redisPrefix + key, payload);
+// DEL
+const redisDel = (key) => {
+  redisClient.del(redisPrefix + key);
 };
 
-module.exports = { redisGet, redisSet, redisClient };
+module.exports = { redisClient, redisSet, redisGet, redisDel };
