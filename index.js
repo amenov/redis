@@ -37,7 +37,7 @@ module.exports = (options = {}) => {
       if (Array.isArray(key)) {
         return key.map((key) => addPrefix(key));
       } else {
-        addPrefix(key);
+        return addPrefix(key);
       }
     } else {
       return key;
