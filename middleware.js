@@ -1,18 +1,18 @@
-const redis = require('redis');
+const redis = require("redis");
 
 /*
   options: Object
     - redisClient?: RedisClient
-    - redisHost?: String
-    - redisPort?: String
-    - redisPrefix?: String
+    - host?: String
+    - port?: String
+    - prefix?: String
 */
 module.exports = (options = {}) => {
   const redisClient =
     options.redisClient ??
     redis.createClient({
-      host: options.redisHost ?? process.env.REDIS_HOST ?? '127.0.0.1',
-      port: options.redisPort ?? process.env.REDIS_PORT ?? '6379',
+      host: options.host ?? process.env.REDIS_HOST ?? "127.0.0.1",
+      port: options.port ?? process.env.REDIS_PORT ?? "6379",
     });
 
   /*
@@ -21,9 +21,9 @@ module.exports = (options = {}) => {
     key: String
   */
   const addPrefix = (key) => {
-    const prefix = options.redisPrefix ?? process.env.REDIS_PREFIX;
+    const prefix = options.prefix ?? process.env.REDIS_PREFIX;
 
-    return (prefix ? prefix + '_' : '') + key;
+    return (prefix ? prefix + "_" : "") + key;
   };
 
   /*
@@ -32,7 +32,7 @@ module.exports = (options = {}) => {
     key: String | Array:String
     withPrefix: Boolean
   */
-  const createKey = (key, withPrefix = true) => {
+  const keyMutation = (key, withPrefix = true) => {
     if (withPrefix) {
       if (Array.isArray(key)) {
         return key.map((key) => addPrefix(key));
@@ -50,9 +50,9 @@ module.exports = (options = {}) => {
     key: String
     withPrefix?: Boolean
   */
-  const redisGet = (key, withPrefix) => {
+  const get = (key, withPrefix) => {
     return new Promise((resolve, reject) => {
-      redisClient.get(createKey(key, withPrefix), (err, data) => {
+      redisClient.get(keyMutation(key, withPrefix), (err, data) => {
         if (err) {
           reject(err);
         } else {
@@ -69,8 +69,8 @@ module.exports = (options = {}) => {
     payload: String
     withPrefix?: Boolean
   */
-  const redisSet = (key, payload, withPrefix) => {
-    redisClient.set(createKey(key, withPrefix), payload);
+  const set = (key, payload, withPrefix) => {
+    redisClient.set(keyMutation(key, withPrefix), payload);
   };
 
   /*
@@ -79,9 +79,9 @@ module.exports = (options = {}) => {
     key: String
     withPrefix?: Boolean
   */
-  const redisKeys = (key, withPrefix) => {
+  const keys = (key, withPrefix) => {
     return new Promise((resolve, reject) => {
-      redisClient.keys(createKey(key, withPrefix), (err, data) => {
+      redisClient.keys(keyMutation(key, withPrefix), (err, data) => {
         if (err) {
           reject(err);
         } else {
@@ -97,16 +97,9 @@ module.exports = (options = {}) => {
     key: String | Array:String
     withPrefix?: Boolean
   */
-  const redisDel = (key, withPrefix) => {
-    redisClient.del(createKey(key, withPrefix));
+  const del = (key, withPrefix) => {
+    redisClient.del(keyMutation(key, withPrefix));
   };
 
-  return {
-    redisClient,
-    createKey,
-    redisSet,
-    redisGet,
-    redisKeys,
-    redisDel,
-  };
+  return { redisClient, keyMutation, set, get, keys, del };
 };

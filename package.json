@@ -2,13 +2,13 @@
   "name": "amenov.redis",
   "version": "1.0.3",
   "description": "",
-  "main": "index.js",
+  "main": "middleware.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amenov/redis.git"
+    "url": "git+https://github.com/amenov/redisjs.git"
   },
   "keywords": [
     "redis"
@@ -16,9 +16,9 @@
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/amenov/redis/issues"
+    "url": "https://github.com/amenov/redisjs/issues"
   },
-  "homepage": "https://github.com/amenov/redis#readme",
+  "homepage": "https://github.com/amenov/redisjs#readme",
   "dependencies": {
     "redis": "^3.0.2"
   }
